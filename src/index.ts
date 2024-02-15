@@ -45,6 +45,15 @@ app.post("/posts", async(c) => {
   return c.json(newPost, 201);
 });
 
+app.put("/posts/:id", async(c) => {
+  const id: string = c.req.param("id");
+  const index = blogPosts.findIndex((p) => p.id === id);
+  const {title, content} = await c.req.json();
+  blogPosts[index] = {...blogPosts[index], title, content};
 
-
+  if(index === -1) {
+    return c.json({message: "Post not found"}, 404);
+  }
+  return c.json(blogPosts[index]);
+});
 export default app
