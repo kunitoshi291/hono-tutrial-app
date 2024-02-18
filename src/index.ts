@@ -48,12 +48,27 @@ app.post("/posts", async(c) => {
 app.put("/posts/:id", async(c) => {
   const id: string = c.req.param("id");
   const index = blogPosts.findIndex((p) => p.id === id);
+
   const {title, content} = await c.req.json();
   blogPosts[index] = {...blogPosts[index], title, content};
 
   if(index === -1) {
     return c.json({message: "Post not found"}, 404);
   }
+  // console.log(blogPosts);
   return c.json(blogPosts[index]);
+});
+
+app.delete("/posts/:id", async(c) => {
+  const id: string = c.req.param("id");
+  const index = blogPosts.findIndex((p) => p.id === id);
+
+  if(index === -1) {
+    return c.json({message: "Post not found"}, 404);
+  }
+ // 指定したid以外をそのまま残すフィルタリング
+  blogPosts = blogPosts.filter((p) => p.id !== id);
+  // console.log(blogPosts);
+  return c.json({ message: "Blog post Deleted" });
 });
 export default app
